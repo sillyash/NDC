@@ -1,11 +1,11 @@
 import pyxel
 from elements import Player
 
-joueur = Player(74,26)
+joueur = Player(20,20)
 ennemis = []
 
 WIDTH = 128
-HEIGHT = 72
+HEIGHT = 128
 
 class App:
     def __init__(self):
@@ -14,10 +14,14 @@ class App:
         pyxel.run(self.update, self.draw)
 
     def update(self):
-        pass
+        joueur.move()
 
     def draw(self):
+        pyxel.cls(0)
         joueur.draw()
-        
+        joueur.draw_life()
+        pyxel.text(2,2, ("LVL - "+str(joueur.lvl)+"             SCORE - "+str(joueur.score)), 3)
+        pyxel.text(110,120, ("ENEMY LVL - "+str(max(ennemi.lvl) for ennemi in ennemis), 3)
+
 
 App()

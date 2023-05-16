@@ -4,8 +4,6 @@ import pyxel
 # contenant les coordonnées de son sprite sur la bangue d'images.
 sprites = [(1,4,14,11), (0,19,16,13), (0,41,18,16), (), ()]
 
-# on crée
-
 # on crée un dictionnaire, chaque clé correspond à la direction du coup, et chaque
 # index la frame (de 0 à 2) pour cette direction, contenant les coordonées sur lka banque d'images.
 slash = {
@@ -26,30 +24,29 @@ class Player:
         self.dir = "up"
 
     def move(self):
-        if pyxel.btnp(KEY_Z) or pyxel.btnp(KEY_UP):
-            self.coord = (x, y-2)
+        if pyxel.btn(pyxel.KEY_Z) or pyxel.btn(pyxel.KEY_UP):
+            self.y -= 0.5
             self.dir = "up"
-        if pyxel.btnp(KEY_S) or pyxel.btnp(KEY_DOWN):
-            self.coord = (x, y+2)
+        if pyxel.btn(pyxel.KEY_S) or pyxel.btn(pyxel.KEY_DOWN):
+            self.y += 0.5
             self.dir = "down"
-        if pyxel.btnp(KEY_Q) or pyxel.btnp(KEY_LEFT):
-            self.coord = (x-2, y)
+        if pyxel.btn(pyxel.KEY_Q) or pyxel.btn(pyxel.KEY_LEFT):
+            self.x -= 0.5
             self.dir = "left"
-        if pyxel.btnp(KEY_D) or pyxel.btnp(KEY_RIGHT):
-            self.coord = (x+2, y)
+        if pyxel.btn(pyxel.KEY_D) or pyxel.btn(pyxel.KEY_RIGHT):
+            self.x += 0.5
             self.dir = "right"
 
     def draw(self):
-        if self.life > 0:
-            pyxel.blt(self.x, self.y, sprites[self.lvl][0], sprites[self.lvl][1], \
-                sprites[self.lvl][2], sprites[self.lvl][3], 0)
+        pyxel.blt(self.x, self.y, 0, sprites[self.lvl][0], sprites[self.lvl][1], \
+            sprites[self.lvl][2], sprites[self.lvl][3], 0)
 
     def draw_life(self):
         for i in range(self.life):
-            pyxel.rect(2 + i * 15, 10, 10, 10, 8)
+            pyxel.rect(3 + i * 6, 120, 5, 5, 4)
 
     def draw_slash(self):
-        pyxel.blt()
+        pass
 
 
 class Enemy:
@@ -57,11 +54,3 @@ class Enemy:
         self.lvl = score//24
         self.life = 3 + lvl
         self.coord = (x, y)
-
-    def move(self):
-        self.x += 1
-
-    def draw(self):
-        if self.life > 0:
-            pass
-        pass
