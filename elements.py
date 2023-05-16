@@ -2,7 +2,7 @@ import pyxel
 
 # on crée une liste, chaque index correspondant à un "niveau" et taille du slime (de 0 à 4),
 # contenant les coordonnées de son sprite sur la bangue d'images.
-sprites = [(1,4,14,12), (0,19,16,14), (0,41,18,17), (), ()]
+sprites = [(1,4,14,12), (0,19,16,14), (0,41,18,17), (0,61,79,19), (0,83,25,21)]
 
 # on crée un dictionnaire, chaque clé correspond à la direction du coup, et chaque
 # index la frame (de 0 à 2) pour cette direction, contenant les coordonées sur lka banque d'images.
@@ -47,27 +47,20 @@ class Player:
             pyxel.rect(3 + i * 6, 120, 5, 5, 4)
 
     def is_hit(self, target)->bool:
-        if self.dir == "up":
-            return target.y+target.h >= self.y >= target.y+target.h+4 and target.x+target.w >= self.x >= target.x
-        if self.dir == "down":
-            return target.y >= self.y >= target.y-4 and target.x+target.w >= self.x >= target.x
-        if self.dir == "left":
-            return target.x+target.w+4 >= self.x >= target.x+target.w and target.y+target.h >= self.y >= target.y
-        if self.dir == "right":
-            return target.x >= self.x >= target.x-4 and target.y+target.h >= self.y >= target.y
+        return target.x+target.w+4 >= self.x >= target.x-4 and target.y+target.h+4 >= self.y >= target.y-4
 
     def slash(self, target):
         target.life -= 1
         self.score += 3
-        target.draw_hit()
-        if self.score%21 == 0 and self.lvl < 5:
+        for i in range(5):
+            target.draw_hit()
+        if self.score%21 == 0 and self.lvl < 4:
             self.lvl += 1
 
     def draw_slash(self):
-        pyxel.blt(self.x, self.y, 0, slash[self.dir][0][0], slash[self.dir][0][1], slash[self.dir][0][2], slash[self.dir][0][3])
-        pyxel.blt(self.x, self.y, 0, slash[self.dir][1][0], slash[self.dir][1][1], slash[self.dir][1][2], slash[self.dir][1][3])
-        pyxel.blt(self.x, self.y, 0, slash[self.dir][2][0], slash[self.dir][2][1], slash[self.dir][2][2], slash[self.dir][2][3])
-        pyxel.blt(self.x, self.y, 0, slash[self.dir][3][0], slash[self.dir][3][1], slash[self.dir][3][2], slash[self.dir][3][3])
+        pyxel.blt(self.x-10, self.y+10, 0, slash[self.dir][0][0], slash[self.dir][0][1], slash[self.dir][0][2], slash[self.dir][0][3])
+        pyxel.blt(self.x-10, self.y+10, 0, slash[self.dir][1][0], slash[self.dir][1][1], slash[self.dir][1][2], slash[self.dir][1][3])
+        pyxel.blt(self.x-10, self.y+10, 0, slash[self.dir][2][0], slash[self.dir][2][1], slash[self.dir][2][2], slash[self.dir][2][3])
 
     def draw_hit(self):
         pyxel.blt(self.x, self.y, 1, sprites[self.lvl][0], sprites[self.lvl][1], sprites[self.lvl][2], sprites[self.lvl][3], 0)
@@ -84,7 +77,7 @@ class Enemy:
         self.score = 0
 
     def move(self, target):
-        while not self.is_hit(target):
+        if not self.is_hit(target):
             if self.y+self.w < target.y:
                 self.y += 0.5
             if self.y > target.y+target.w:
@@ -110,9 +103,14 @@ class Enemy:
         for i in range(2):
             self.y -= 1.5
 
+    def lvl_update(self):
+        if self.score%21 == 0 and self.lvl < 5:
+            self.lvl += 1
+
     def attack(self, target):
         target.life -= 1
-        target.draw_hit()
+        for i in range(5):
+            target.draw_hit()
 
     def draw_hit(self):
         pyxel.blt(self.x, self.y, 1, sprites[self.lvl][0]+40, sprites[self.lvl][1], sprites[self.lvl][2], sprites[self.lvl][3], 0)
