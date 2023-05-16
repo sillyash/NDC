@@ -3,7 +3,7 @@ nom du jeu:  	slimy
 univers : fantaisy 
 
 controle-> flèche directionnelle ou Z Q S D pour le mouvement
-		  clique gauche afin de frapper 
+		  SPACE afin de frapper 
 
 résolution: 128 * 128
 
