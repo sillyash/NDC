@@ -1,15 +1,10 @@
 import pyxel
 
-
-class Car:
-    def __init__(self, x, y, w, h, life, sprite):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        self.life = life
-        self.sprite = sprite
-        self.sheet = True
+class Enemy:
+    def __init__(self, x, y, score):
+        self.lvl = score//24
+        self.life = 3 + lvl
+        self.coord = (x, y)
 
     def move(self):
         self.x += 1
@@ -26,9 +21,10 @@ class Player:
         self.life = 3
         self.score = 0
         self.coord = (x,y)
+        self.lvl = 1
 
     def draw(self, lvl):
-        #pyxel.blt()
+        pass
 
     def move(self):
         if pyxel.btnp(KEY_Z) or pyxel.btnp(KEY_UP):
