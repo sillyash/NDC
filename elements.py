@@ -21,26 +21,25 @@ class Car:
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, x, y):
         self.tir = False
         self.life = 3
         self.score = 0
+        self.coord = (x,y)
 
-    def draw_visor(self):
-        pyxel.circb(x, y, 4, )
-        if self.tir:
-            pyxel.circb(x, y, 4,)
+    def draw(self, lvl):
+        #pyxel.blt()
+
+    def move(self):
+        if pyxel.btnp(KEY_Z) or pyxel.btnp(KEY_UP):
+            self.coord = (x, y-2)
+        if pyxel.btnp(KEY_S) or pyxel.btnp(KEY_DOWN):
+            self.coord = (x, y+2)
+        if pyxel.btnp(KEY_Q) or pyxel.btnp(KEY_LEFT):
+            self.coord = (x-2, y)
+        if pyxel.btnp(KEY_D) or pyxel.btnp(KEY_RIGHT):
+            self.coord = (x+2, y)
 
     def draw_life(self):
         for i in range(self.life):
             pyxel.rect(2 + i * 15, 10, 10, 10, 9)
-
-    def fire(self, target):
-        self.tir = pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT)
-        if self.tir and self.hit(target):
-            return True
-
-    def hit(self, target):
-        return pyxel.mouse_x > target.x and pyxel.mouse_y > target.y and \
-            pyxel.mouse_x < target.x + target.w and \
-            pyxel.mouse_y < target.y + target.h
