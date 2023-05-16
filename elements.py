@@ -15,14 +15,14 @@ slash = {
 
 
 class Player:
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y):
+        self.lvl = 0
         self.x = x
         self.y = y
-        self.w = w
-        self.h = h
+        self.w = sprites[self.lvl][2]
+        self.h = sprites[self.lvl][3]
         self.life = 3
         self.score = 0
-        self.lvl = 0
         self.dir = "up"
 
     def move(self):
@@ -40,8 +40,7 @@ class Player:
             self.dir = "right"
 
     def draw(self):
-        pyxel.blt(self.x, self.y, 0, sprites[self.lvl][0], sprites[self.lvl][1], \
-            sprites[self.lvl][2], sprites[self.lvl][3], 0)
+        pyxel.blt(self.x, self.y, 0, sprites[self.lvl][0], sprites[self.lvl][1], sprites[self.lvl][2], sprites[self.lvl][3], 0)
 
     def draw_life(self):
         for i in range(self.life):
@@ -58,11 +57,11 @@ class Player:
             return target.x >= self.x >= target.x-4 and target.y+target.h >= self.y >= target.y
 
     def slash(self, target):
-        if self.is_hit(self,target):
-            target.life -= 1
-            self.score += 3
-            target.hit()
-            target.draw_hit()
+        target.life -= 1
+        self.score += 3
+        target.draw_hit()
+        if self.score%21 == 0 and self.lvl < 5:
+            self.lvl += 1
 
     def draw_slash(self):
         pyxel.blt(self.x, self.y, 0, slash[self.dir][0][0], slash[self.dir][0][1], slash[self.dir][0][2], slash[self.dir][0][3])
@@ -71,21 +70,21 @@ class Player:
         pyxel.blt(self.x, self.y, 0, slash[self.dir][3][0], slash[self.dir][3][1], slash[self.dir][3][2], slash[self.dir][3][3])
 
     def draw_hit(self):
-        pyxel.blt(self.x, self.y, 1, sprites[self.lvl][0], sprites[self.lvl][1], \
-            sprites[self.lvl][2], sprites[self.lvl][3], 0)
+        pyxel.blt(self.x, self.y, 1, sprites[self.lvl][0], sprites[self.lvl][1], sprites[self.lvl][2], sprites[self.lvl][3], 0)
+
 
 class Enemy:
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y):
+        self.lvl = 0
         self.x = x
         self.y = y
-        self.w = w
-        self.h = h
+        self.w = sprites[self.lvl][2]
+        self.h = sprites[self.lvl][3]
         self.life = 3
         self.score = 0
-        self.lvl = 0
 
     def move(self, target):
-        while not is_hit(self,target):
+        while not self.is_hit(target):
             if self.y+self.w < target.y:
                 self.y += 0.5
             if self.y > target.y+target.w:
@@ -96,8 +95,7 @@ class Enemy:
                 self.x -= 0.5
 
     def draw(self):
-        pyxel.blt(self.x, self.y, 0, sprites[self.lvl][0], sprites[self.lvl][1], \
-            sprites[self.lvl][2], sprites[self.lvl][3], 0)
+        pyxel.blt(self.x, self.y, 0, sprites[self.lvl][0]+40, sprites[self.lvl][1], sprites[self.lvl][2], sprites[self.lvl][3], 0)
 
     def draw_life(self):
         for i in range(self.life):
@@ -106,16 +104,15 @@ class Enemy:
     def is_hit(self, target)->bool:
         return target.x+target.w >= self.x >= target.x and target.y+target.h >= self.y >= target.y
 
-    def slash(self, target):
-        if self.is_hit(self,target):
-            target.life -= 1
-            target.draw_hit()
+    def draw_attack(self):
+        for i in range(6):
+            self.y += 0.5
+        for i in range(2):
+            self.y -= 1.5
 
-    def draw_slash(self):
-        pyxel.blt(self.x, self.y, 0, slash[self.dir][0][0], slash[self.dir][0][1], slash[self.dir][0][2], slash[self.dir][0][3])
-        pyxel.blt(self.x, self.y, 0, slash[self.dir][1][0], slash[self.dir][1][1], slash[self.dir][1][2], slash[self.dir][1][3])
-        pyxel.blt(self.x, self.y, 0, slash[self.dir][2][0], slash[self.dir][2][1], slash[self.dir][2][2], slash[self.dir][2][3])
-        pyxel.blt(self.x, self.y, 0, slash[self.dir][3][0], slash[self.dir][3][1], slash[self.dir][3][2], slash[self.dir][3][3])
+    def attack(self, target):
+        target.life -= 1
+        target.draw_hit()
 
     def draw_hit(self):
-        pass
+        pyxel.blt(self.x, self.y, 1, sprites[self.lvl][0]+40, sprites[self.lvl][1], sprites[self.lvl][2], sprites[self.lvl][3], 0)
